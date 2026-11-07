@@ -27,6 +27,7 @@ describe('OctoFit presentation contract', () => {
       const url = String(input);
       if (url.includes('/api/activities')) return new Response(JSON.stringify({ activities: [{ type: 'run', minutes: 30, points: 30 }] }), { status: 200 });
       if (url.includes('/api/teams')) return new Response(JSON.stringify({ teams: [{ name: 'Octocats', members: ['Mona'] }] }), { status: 200 });
+      if (url.includes('/api/users')) return new Response(JSON.stringify({ users: [{ name: 'Mona', email: 'mona@example.com' }] }), { status: 200 });
       if (url.includes('/api/leaderboard')) return new Response(JSON.stringify({ leaderboard: [{ teamName: 'Octocats', totalPoints: 90, rank: 1 }] }), { status: 200 });
       if (/\/api\/workouts\/suggestions\/mona(%40|@)example\.com$/.test(url)) return new Response(JSON.stringify({ suggestions: [{ title: 'Intervals', reason: 'Build endurance' }] }), { status: 200 });
       return new Response(JSON.stringify({ message: 'Not found' }), { status: 404 });
@@ -37,6 +38,21 @@ describe('OctoFit presentation contract', () => {
     renderRoute('/activities');
     expect(screen.getByRole('heading', { name: /activities/i })).toBeInTheDocument();
     await waitFor(() => expect(screen.getByText(/run/i)).toBeInTheDocument());
+  });
+
+  it('renders users from the API and includes users in the navigation', async () => {
+    renderRoute('/users');
+    expect(screen.getByRole('link', { name: 'Users' })).toHaveAttribute('href', '/users');
+    await waitFor(() => expect(screen.getByText('Mona')).toBeInTheDocument());
+  });
+
+  it('renders paginated API results', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => new Response(JSON.stringify({
+      count: 1,
+      results: [{ type: 'cycle', minutes: 45, points: 45 }],
+    }), { status: 200 })));
+    renderRoute('/activities');
+    await waitFor(() => expect(screen.getByText('cycle')).toBeInTheDocument());
   });
 
   it('renders teams, leaderboard, and workout suggestions with accessible content', async () => {
