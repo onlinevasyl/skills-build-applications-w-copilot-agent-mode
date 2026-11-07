@@ -16,6 +16,20 @@
       }
     },
     {
+      "name": "Launch Django Backend",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/octofit-tracker/backend/manage.py",
+      "args": [
+        "runserver",
+        "0.0.0.0:8000"
+      ],
+      "django": true,
+      "env": {
+        "CODESPACE_NAME": "${env:CODESPACE_NAME}"
+      }
+    },
+    {
       "name": "Launch Vite Frontend",
       "type": "node",
       "request": "launch",
