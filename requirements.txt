@@ -1,0 +1,1 @@
+# OctoFit Tracker uses Express/TypeScript and React/Vite; no Python packages are required.
