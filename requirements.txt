@@ -1,1 +1,3 @@
-# OctoFit Tracker uses Express/TypeScript and React/Vite; no Python packages are required.
+Django>=5.2,<5.3
+django-mongodb-backend==5.2.4
+django-cors-headers>=4.7,<5
